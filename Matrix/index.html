@@ -1,0 +1,97 @@
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+ <link type="text/css" rel="stylesheet" href="style.css"/>
+ <title>Matrix</title>
+</head>
+ <body onload="RunMatrix()">
+  
+        <div>
+            <span>
+				<label for="frequency">Frequency: </label>
+				<output for="frequencyOut" id= "frequencyOut">0.15</output>
+				<input type="range" min="0.1" max="0.2" value="0.15" id="frequency" step="0.01" onchange="updateOutputFrequency(value);">
+            </span>
+			<span>
+				<label for="speed">Speed: </label>
+				<output for="speed" id= "speedOut">50</output>
+				<input type="range" min="0" max="100" id="speed" step="1" onchange="updateOutputSpeed(value);" value="50">
+			</span>
+			<span>
+				<label for="fontSizeOut">Font size: </label>
+				<output for="fontSizeOut" id= "fontSizeOut">20</output>
+				<input type="range" min="10" max="30" value="20" id="fontSize" step="1" onchange="updateOutputFont(value);">
+			</span>
+			<button onclick="document.getElementById('player').play()">Play</button>
+			<button onclick="document.getElementById('player').pause()">Pause</button>
+			<button onclick="document.getElementById('player').volume+=0.1">Volume + </button>
+			<button onclick="document.getElementById('player').volume-=0.1">Volume - </button><br></br>
+			<canvas id="canvas" height="540"></canvas><br/><br/>
+            <audio autoplay="autoplay" loop="loop" id="player">
+                <source src="http://music-pesni.com/music/c795427f89d640b8765138982a2e85b9.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+        
+    </body>
+<script>
+var Game_Interval;
+
+function RunMatrix(){
+            speed = 100 - document.getElementById("speed").value;
+            fontSize = document.getElementById("fontSize").value;
+            frequency = 0.3 - document.getElementById("frequency").value;  
+
+            var scr=window.screen;
+            var width = canvas.width=scr.width;
+            var height = canvas.height = scr.height;
+            var yPositions = Array(300).join(0).split('');
+            var ctx=canvas.getContext('2d');
+ 
+            var draw = function () {
+
+                ctx.fillStyle='rgba(0,0,0,'+ frequency +')';
+                ctx.fillRect(0, 0, width, height);
+                ctx.fillStyle='#0F0';
+                ctx.font = fontSize + 'pt Georgia';
+  
+                yPositions.map(function(y, index){
+                text = String.fromCharCode(Math.random() * 33 + 12353);
+                x = index * 10 + 10;
+                canvas.getContext('2d').fillText(text, x, y);
+                    
+                if(y > 100 + Math.random()*1e4)
+                {
+                    yPositions[index]=0; 
+                }
+                else
+                {
+                    yPositions[index] = y + 15;
+                }
+            });
+                
+        };
+    
+    Game_Interval = setInterval(draw, speed);
+    }
+
+function stopMatrix() {
+    clearInterval(Game_Interval);
+    RunMatrix();
+};
+
+function updateOutputSpeed(value) {
+  document.querySelector('#speedOut').value = value;
+  stopMatrix();
+};
+
+function updateOutputFont(value) {
+  document.querySelector('#fontSizeOut').value = value;     
+  stopMatrix();
+};
+
+function updateOutputFrequency(value) {
+  document.querySelector('#frequencyOut').value = value;
+  stopMatrix();
+};
+</script>
+</body></html>
